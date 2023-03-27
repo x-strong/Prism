@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
@@ -100,6 +100,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prism.DryIoc.Maui.Tests", "tests\Maui\Prism.DryIoc.Maui.Tests\Prism.DryIoc.Maui.Tests.csproj", "{8711D306-1118-4A11-9399-EF14AA13015E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Events", "src\Prism.Events\Prism.Events.csproj", "{8610485A-BE9F-4938-86D4-E9F1FA1739A0}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Prism.Grace.Shared", "src\Containers\Prism.Grace.Shared\Prism.Grace.Shared.shproj", "{93590426-A892-4C20-835A-90C76907794B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Ioc.Grace.Tests", "tests\Containers\Prism.Ioc.Grace.Tests\Prism.Ioc.Grace.Tests.csproj", "{E32016A4-3FA2-408C-A5ED-85335D91B2ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -435,6 +438,18 @@ Global
 		{8610485A-BE9F-4938-86D4-E9F1FA1739A0}.Release|x64.Build.0 = Release|Any CPU
 		{8610485A-BE9F-4938-86D4-E9F1FA1739A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{8610485A-BE9F-4938-86D4-E9F1FA1739A0}.Release|x86.Build.0 = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|x64.Build.0 = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Debug|x86.Build.0 = Debug|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|x64.ActiveCfg = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|x64.Build.0 = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|x86.ActiveCfg = Release|Any CPU
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -481,6 +496,8 @@ Global
 		{7A1E157F-D4CD-4E6B-9CE3-1894EB2A15A7} = {540CEEC1-D541-4614-BF0B-18056A83E434}
 		{8711D306-1118-4A11-9399-EF14AA13015E} = {540CEEC1-D541-4614-BF0B-18056A83E434}
 		{8610485A-BE9F-4938-86D4-E9F1FA1739A0} = {F3664D7A-6FF5-4D1F-9F5F-26EE87F032D3}
+		{93590426-A892-4C20-835A-90C76907794B} = {75B1C655-8365-4130-8B79-C748BF0403F2}
+		{E32016A4-3FA2-408C-A5ED-85335D91B2ED} = {D62DD517-CA80-449D-A26B-9AB427379825}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7433AE2-B1A0-4C1A-887E-5CAA7AAF67A6}
@@ -496,13 +513,15 @@ Global
 		src\Containers\Prism.Unity.Shared\Prism.Unity.Shared.projitems*{704e14a4-c3a2-492d-9c4e-7d386a18b698}*SharedItemsImports = 5
 		tests\Containers\Prism.Container.Shared\Prism.Container.Shared.projitems*{704e14a4-c3a2-492d-9c4e-7d386a18b698}*SharedItemsImports = 5
 		tests\Containers\Prism.Container.Shared\Prism.Container.Shared.projitems*{78932299-2281-4a59-bfb8-07de3014f748}*SharedItemsImports = 13
+		src\Containers\Prism.Grace.Shared\Prism.Grace.Shared.projitems*{93590426-a892-4c20-835a-90c76907794b}*SharedItemsImports = 13
 		src\Containers\Prism.DryIoc.Shared\Prism.DryIoc.Shared.projitems*{aad8a958-546b-4b7d-bbd1-d79e825530eb}*SharedItemsImports = 5
 		tests\Wpf\Prism.Container.Wpf.Shared\Prism.Container.Wpf.Shared.projitems*{ba05687e-2317-4a65-805b-c596f52f7203}*SharedItemsImports = 5
 		tests\Wpf\Prism.Container.Wpf.Shared\Prism.Container.Wpf.Shared.projitems*{bd42a7d6-a84d-4d27-9c28-7f6a2ec477f1}*SharedItemsImports = 13
 		src\Containers\Prism.Unity.Shared\Prism.Unity.Shared.projitems*{c2f58215-92f0-4501-a9f4-862c78b2b4ce}*SharedItemsImports = 5
 		tests\Forms\Prism.DI.Forms.Tests\Prism.DI.Forms.Tests.projitems*{c2ff8459-f2d1-4b87-a31a-82a1835f89cf}*SharedItemsImports = 5
 		src\Containers\Prism.Unity.Shared\Prism.Unity.Shared.projitems*{d66336a6-07e5-401a-a710-daedd6975d59}*SharedItemsImports = 13
-		src\Containers\Prism.DryIoc.Shared\Prism.DryIoc.Shared.projitems*{db530d15-0556-4b6f-96b2-1497c8df08d6}*SharedItemsImports = 5
+		src\Containers\Prism.Grace.Shared\Prism.Grace.Shared.projitems*{e32016a4-3fa2-408c-a5ed-85335d91b2ed}*SharedItemsImports = 5
+		tests\Containers\Prism.Container.Shared\Prism.Container.Shared.projitems*{e32016a4-3fa2-408c-a5ed-85335d91b2ed}*SharedItemsImports = 5
 		src\Containers\Prism.Unity.Shared\Prism.Unity.Shared.projitems*{e9a2458b-999d-4d36-822f-663d3830575a}*SharedItemsImports = 5
 		tests\Forms\Prism.DI.Forms.Tests\Prism.DI.Forms.Tests.projitems*{fac4fa5a-d6c1-4787-9b1f-a3ec6e2fb26e}*SharedItemsImports = 13
 	EndGlobalSection
