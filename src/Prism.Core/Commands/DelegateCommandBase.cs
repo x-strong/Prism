@@ -5,13 +5,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Windows.Input;
+using Prism.Mvvm;
 
 namespace Prism.Commands
 {
     /// <summary>
     /// An <see cref="ICommand"/> whose delegates can be attached for <see cref="Execute"/> and <see cref="CanExecute"/>.
     /// </summary>
-    public abstract class DelegateCommandBase : ICommand, IActiveAware
+    public abstract class DelegateCommandBase : BindableBase, ICommand, IActiveAware
     {
         private bool _isActive;
         private readonly Dictionary<Type, Action<Exception>> _exceptionHandlers = new Dictionary<Type, Action<Exception>>();
