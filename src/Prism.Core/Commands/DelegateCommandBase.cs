@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Windows.Input;
@@ -13,6 +14,7 @@ namespace Prism.Commands
     public abstract class DelegateCommandBase : ICommand, IActiveAware
     {
         private bool _isActive;
+        private readonly Dictionary<Type, Action<Exception>> _exceptionHandlers = new Dictionary<Type, Action<Exception>>();
 
         private SynchronizationContext _synchronizationContext;
         private readonly HashSet<string> _observedPropertiesExpressions = new HashSet<string>();
@@ -129,6 +131,41 @@ namespace Prism.Commands
         protected virtual void OnIsActiveChanged()
         {
             IsActiveChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected void AddExceptionHandlerInternal<T>(Action<Exception> handler)
+            where T : Exception
+        {
+            _exceptionHandlers[typeof(T)] = handler;
+        }
+
+        protected bool HandleException(Exception ex)
+        {
+            if (_exceptionHandlers.Count < 1)
+                return false;
+
+            var exType = ex.GetType();
+            var key = _exceptionHandlers.Keys.FirstOrDefault(x => x == exType);
+            if (key is null)
+            {
+                var candidates = _exceptionHandlers.Keys.Where(x => x.IsAssignableFrom(exType));
+                if (!candidates.Any())
+                    return false;
+                else if (candidates.Count() == 1)
+                    key = candidates.First();
+                else
+                    key = GetExceptionHandlerType(exType, candidates);
+            }
+
+            var handler = _exceptionHandlers[key];
+            handler(ex);
+            return true;
+        }
+
+        private Type GetExceptionHandlerType(Type exType, IEnumerable<Type> candidates)
+        {
+            var key = candidates.FirstOrDefault(x => x == exType.BaseType);
+            return key ?? GetExceptionHandlerType(exType.BaseType, candidates);
         }
 
         #endregion

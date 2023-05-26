@@ -46,7 +46,15 @@ namespace Prism.Commands
         ///</summary>
         public void Execute()
         {
-            _executeMethod();
+            try
+            {
+                _executeMethod();
+            }
+            catch (Exception ex)
+            {
+                if (!HandleException(ex))
+                    throw;
+            }
         }
 
         /// <summary>
@@ -55,7 +63,17 @@ namespace Prism.Commands
         /// <returns>Returns <see langword="true"/> if the command can execute,otherwise returns <see langword="false"/>.</returns>
         public bool CanExecute()
         {
-            return _canExecuteMethod();
+            try
+            {
+                return _canExecuteMethod();
+            }
+            catch (Exception ex)
+            {
+                if (!HandleException(ex))
+                    throw;
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -98,6 +116,29 @@ namespace Prism.Commands
         {
             _canExecuteMethod = canExecuteExpression.Compile();
             ObservesPropertyInternal(canExecuteExpression);
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the ability to connect a delegate to catch exceptions encountered by CanExecute or the Execute methods of the DelegateCommand
+        /// </summary>
+        /// <param name="catch">TThe callback when a specific exception is encountered</param>
+        /// <returns>The current instance of DelegateCommand</returns>
+        public DelegateCommand Catch<TException>(Action<TException> @catch)
+            where TException : Exception
+        {
+            AddExceptionHandlerInternal<TException>(ex => @catch((TException)ex));
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the ability to connect a delegate to catch exceptions encountered by CanExecute or the Execute methods of the DelegateCommand
+        /// </summary>
+        /// <param name="catch">The generic / default callback when an exception is encountered</param>
+        /// <returns>The current instance of DelegateCommand</returns>
+        public DelegateCommand Catch(Action<Exception> @catch)
+        {
+            AddExceptionHandlerInternal<Exception>(@catch);
             return this;
         }
     }
