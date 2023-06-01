@@ -1,5 +1,7 @@
 using System;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Prism.Properties;
 
@@ -141,5 +143,53 @@ namespace Prism.Commands
             AddExceptionHandlerInternal<Exception>(@catch);
             return this;
         }
+
+        /// <summary>
+        /// Create a new <see cref="DelegateCommand"/>
+        /// </summary>
+        /// <param name="executeMethod"></param>
+        /// <returns>An instance of the <see cref="DelegateCommand"/>.</returns>
+        public static DelegateCommand Create(Action executeMethod) =>
+            new DelegateCommand(executeMethod);
+
+        public static DelegateCommand Create(Action executeMethod, Func<bool> canExecute) =>
+            new DelegateCommand(executeMethod, canExecute);
+
+        public static DelegateCommand<T> Create<T>(Action<T> executeMethod) =>
+            new DelegateCommand<T>(executeMethod);
+
+        public static DelegateCommand<T> Create<T>(Action<T> executeMethod, Func<T, bool> canExecute) =>
+            new DelegateCommand<T>(executeMethod, canExecute);
+
+        public static AsyncDelegateCommand CreateFromTask(Func<ValueTask> executeMethod) =>
+            new AsyncDelegateCommand(executeMethod);
+
+        public static AsyncDelegateCommand CreateFromTask(Func<CancellationToken, ValueTask> executeMethod) =>
+            new AsyncDelegateCommand(executeMethod);
+
+        public static AsyncDelegateCommand CreateFromTask(Func<ValueTask> executeMethod, Func<bool> canExecute) =>
+            new AsyncDelegateCommand(executeMethod, canExecute);
+
+        public static AsyncDelegateCommand CreateFromTask(Func<CancellationToken, ValueTask> executeMethod, Func<bool> canExecute) =>
+            new AsyncDelegateCommand(executeMethod, canExecute);
+
+        public static AsyncDelegateCommand<T> CreateFromTask<T>(Func<T, ValueTask> executeMethod) =>
+            new AsyncDelegateCommand<T>(executeMethod);
+
+        public static AsyncDelegateCommand<T> CreateFromTask<T>(Func<T, CancellationToken, ValueTask> executeMethod) =>
+            new AsyncDelegateCommand<T>(executeMethod);
+
+        public static AsyncDelegateCommand<T> CreateFromTask<T>(Func<T, ValueTask> executeMethod, Func<T, bool> canExecute) =>
+            new AsyncDelegateCommand<T>(executeMethod, canExecute);
+
+        /// <summary>
+        /// Creates a new <see cref="AsyncDelegateCommand{T}" /> from a <see cref="CreateFromTask(Func{CancellationToken, ValueTask})"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="executeMethod"></param>
+        /// <param name="canExecute"></param>
+        /// <returns></returns>
+        public static AsyncDelegateCommand<T> CreateFromTask<T>(Func<T, CancellationToken, ValueTask> executeMethod, Func<T, bool> canExecute) =>
+            new AsyncDelegateCommand<T>(executeMethod, canExecute);
     }
 }
