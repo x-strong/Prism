@@ -2,32 +2,61 @@
 using System.Threading.Tasks;
 using Prism.Properties;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Windows.Input;
 
+#nullable enable
 namespace Prism.Commands
 {
-    public class AsyncDelegateCommand<T> : DelegateCommandBase
+    /// <summary>
+    /// Creates an instance 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class AsyncDelegateCommand<T> : DelegateCommandBase, IAsyncCommand
     {
         private bool _isExecuting;
-        private readonly Func<Task> _executeMethod;
+        private readonly Func<T, CancellationToken, ValueTask> _executeMethod;
         private Func<T, bool> _canExecuteMethod;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AsyncDelegateCommand"/> with the <see cref="Func{Task}"/> to invoke on execution.
+        /// Creates a new instance of <see cref="AsyncDelegateCommand"/> with the <see cref="Func{ValueTask}"/> to invoke on execution.
         /// </summary>
-        /// <param name="executeMethod">The <see cref="Func{Task}"/> to invoke when <see cref="ICommand.Execute(object)"/> is called.</param>
-        public AsyncDelegateCommand(Func<Task> executeMethod)
+        /// <param name="executeMethod">The <see cref="Func{T, ValueTask}"/> to invoke when <see cref="ICommand.Execute(object)"/> is called.</param>
+        public AsyncDelegateCommand(Func<T, ValueTask> executeMethod)
+            : this((p, t) => executeMethod(p), _ => true)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AsyncDelegateCommand"/> with the <see cref="Func{ValueTask}"/> to invoke on execution.
+        /// </summary>
+        /// <param name="executeMethod">The <see cref="Func{T, CancellationToken, ValueTask}"/> to invoke when <see cref="ICommand.Execute(object)"/> is called.</param>
+        public AsyncDelegateCommand(Func<T, CancellationToken, ValueTask> executeMethod)
             : this(executeMethod, _ => true)
         {
 
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="DelegateCommand"/> with the <see cref="Func{Task}"/> to invoke on execution
+        /// Creates a new instance of <see cref="DelegateCommand"/> with the <see cref="Func{ValueTask}"/> to invoke on execution
         /// and a <see langword="Func" /> to query for determining if the command can execute.
         /// </summary>
-        /// <param name="executeMethod">The <see cref="Func{Task}"/> to invoke when <see cref="ICommand.Execute"/> is called.</param>
-        /// <param name="canExecuteMethod">The <see cref="Func{T, bool}"/> to invoke when <see cref="ICommand.CanExecute"/> is called</param>
-        public AsyncDelegateCommand(Func<Task> executeMethod, Func<T, bool> canExecuteMethod)
+        /// <param name="executeMethod">The <see cref="Func{T, ValueTask}"/> to invoke when <see cref="ICommand.Execute"/> is called.</param>
+        /// <param name="canExecuteMethod">The delegate to invoke when <see cref="ICommand.CanExecute"/> is called</param>
+        public AsyncDelegateCommand(Func<T, ValueTask> executeMethod, Func<T, bool> canExecuteMethod)
+            : this((p,c) => executeMethod(p), canExecuteMethod)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DelegateCommand"/> with the <see cref="Func{ValueTask}"/> to invoke on execution
+        /// and a <see langword="Func" /> to query for determining if the command can execute.
+        /// </summary>
+        /// <param name="executeMethod">The <see cref="Func{T, CancellationToken, ValueTask}"/> to invoke when <see cref="ICommand.Execute"/> is called.</param>
+        /// <param name="canExecuteMethod">The delegate to invoke when <see cref="ICommand.CanExecute"/> is called</param>
+        public AsyncDelegateCommand(Func<T, CancellationToken, ValueTask> executeMethod, Func<T, bool> canExecuteMethod)
             : base()
         {
             if (executeMethod == null || canExecuteMethod == null)
@@ -49,12 +78,12 @@ namespace Prism.Commands
         ///<summary>
         /// Executes the command.
         ///</summary>
-        public async Task Execute()
+        public async ValueTask Execute(T parameter, CancellationToken cancellationToken = default)
         {
             try
             {
                 IsExecuting = true;
-                await _executeMethod();
+                await _executeMethod(parameter, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -71,14 +100,14 @@ namespace Prism.Commands
         /// Determines if the command can be executed.
         /// </summary>
         /// <returns>Returns <see langword="true"/> if the command can execute,otherwise returns <see langword="false"/>.</returns>
-        public bool CanExecute()
+        public bool CanExecute(T parameter)
         {
             try
             {
                 if (IsExecuting)
                     return false;
 
-                return _canExecuteMethod?.Invoke() ?? true;
+                return _canExecuteMethod?.Invoke(parameter) ?? true;
             }
             catch (Exception ex)
             {
@@ -95,7 +124,15 @@ namespace Prism.Commands
         /// <param name="parameter">Command Parameter</param>
         protected override async void Execute(object parameter)
         {
-            await Execute();
+            try
+            {
+                await Execute((T)parameter);
+            }
+            catch (Exception ex)
+            {
+                if (!HandleException(ex))
+                    throw;
+            }
         }
 
         /// <summary>
@@ -105,7 +142,17 @@ namespace Prism.Commands
         /// <returns><see langword="true"/> if the Command Can Execute, otherwise <see langword="false" /></returns>
         protected override bool CanExecute(object parameter)
         {
-            return CanExecute();
+            try
+            {
+                return CanExecute((T)parameter);
+            }
+            catch (Exception ex)
+            {
+                if (!HandleException(ex))
+                    throw;
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -154,6 +201,34 @@ namespace Prism.Commands
         {
             AddExceptionHandlerInternal<Exception>(@catch);
             return this;
+        }
+
+        async ValueTask IAsyncCommand.ExecuteAsync(object? parameter)
+        {
+            try
+            {
+                // If T is not nullable this may throw an exception
+                await Execute((T)parameter, default);
+            }
+            catch (Exception ex)
+            {
+                if(!HandleException(ex))
+                    throw;
+            }
+        }
+
+        async ValueTask IAsyncCommand.ExecuteAsync(object? parameter, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // If T is not nullable this may throw an exception
+                await Execute((T)parameter, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                if (!HandleException(ex))
+                    throw;
+            }
         }
     }
 }

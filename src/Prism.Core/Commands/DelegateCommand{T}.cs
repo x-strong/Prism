@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Input;
 using Prism.Properties;
 
+#nullable enable
 namespace Prism.Commands
 {
     /// <summary>
@@ -49,7 +50,7 @@ namespace Prism.Commands
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
-        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
+        /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command.</param>
         /// <exception cref="ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> are <see langword="null" />.</exception>
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
             : base()
