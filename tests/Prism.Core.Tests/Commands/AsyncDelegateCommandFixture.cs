@@ -26,7 +26,7 @@ namespace Prism.Core.Tests.Commands
             Assert.False(command.CanExecute());
             tcs.SetResult("complete");
             await task;
-            Assert.True(!command.CanExecute());
+            Assert.True(command.CanExecute());
         }
 
         [Fact]
@@ -34,14 +34,18 @@ namespace Prism.Core.Tests.Commands
         {
             // Arrange
             bool executed = false;
+            var tcs = new TaskCompletionSource<object>();
             var command = new AsyncDelegateCommand(async (_) =>
             {
-                await Task.Delay(100); // Simulate some asynchronous operation
+                await tcs.Task;
                 executed = true;
             });
 
             // Act
-            await command.Execute();
+            var task = command.Execute();
+            Assert.False(executed);
+            tcs.SetResult("complete");
+            await task;
 
             // Assert
             Assert.True(executed);

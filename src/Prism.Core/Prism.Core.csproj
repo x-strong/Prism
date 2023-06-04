@@ -11,9 +11,6 @@
     <PackageTags>prism;wpf;xamarin;dotnet maui;maui;uno;unoplatform;mvvm;xaml</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.Contains('netstandard')) OR $(TargetFramework.Contains('net4'))">
-    <PackageReference Include="System.Threading.Tasks.Extensions" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />

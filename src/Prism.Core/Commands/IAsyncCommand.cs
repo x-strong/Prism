@@ -8,22 +8,22 @@ namespace Prism.Commands
 {
     internal interface IAsyncCommand : ICommand
     {
-        ValueTask ExecuteAsync(object? parameter);
-        ValueTask ExecuteAsync(object? parameter, CancellationToken cancellationToken);
+        Task ExecuteAsync(object? parameter);
+        Task ExecuteAsync(object? parameter, CancellationToken cancellationToken);
     }
 
     public class DemoCommand : IAsyncCommand
     {
         private readonly Func<bool> _canExecute;
-        private readonly Func<CancellationToken, ValueTask> _execute;
+        private readonly Func<CancellationToken, Task> _execute;
 
-        public DemoCommand(Func<CancellationToken, ValueTask> execute, Func<bool> canExecute)
+        public DemoCommand(Func<CancellationToken, Task> execute, Func<bool> canExecute)
         {
             _execute = execute;
             _canExecute = canExecute;
         }
 
-        public DemoCommand(Func<CancellationToken, ValueTask> execute)
+        public DemoCommand(Func<CancellationToken, Task> execute)
             : this(execute, () => true)
         {
         }
@@ -48,9 +48,9 @@ namespace Prism.Commands
 
         public bool CanExecute() => !IsExecuting && _canExecute();
 
-        public ValueTask Execute() => Execute(default);
+        public Task Execute() => Execute(default);
 
-        public ValueTask Execute(CancellationToken cancellationToken)
+        public Task Execute(CancellationToken cancellationToken)
         {
             try
             {
@@ -67,8 +67,8 @@ namespace Prism.Commands
 
         async void ICommand.Execute(object? parameter) => await Execute();
 
-        ValueTask IAsyncCommand.ExecuteAsync(object? parameter) => Execute();
+        Task IAsyncCommand.ExecuteAsync(object? parameter) => Execute();
 
-        ValueTask IAsyncCommand.ExecuteAsync(object? parameter, CancellationToken cancellationToken) => Execute(cancellationToken);
+        Task IAsyncCommand.ExecuteAsync(object? parameter, CancellationToken cancellationToken) => Execute(cancellationToken);
     }
 }
