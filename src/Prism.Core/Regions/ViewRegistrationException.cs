@@ -38,7 +38,5 @@ namespace Prism.Regions
         public ViewRegistrationException(string message, Exception inner) : base(message, inner)
         {
         }
-
-
     }
 }

@@ -1,13 +1,11 @@
-
-
 using System;
-using Prism.Regions.Behaviors;
+//using Prism.Regions.Behaviors;
 
 namespace Prism.Regions
 {
     /// <summary>
     /// When <see cref="RegionMemberLifetimeAttribute"/> is applied to class provides data
-    /// the <see cref="RegionMemberLifetimeBehavior"/> can use to determine if the instance should
+    /// the RegionMemberLifetimeBehavior can use to determine if the instance should
     /// be removed when it is deactivated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true, Inherited = true)]

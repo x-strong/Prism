@@ -1,13 +1,5 @@
-
-
 using System;
 using System.ComponentModel;
-
-#if HAS_WINUI
-using Microsoft.UI.Xaml;
-#else
-using System.Windows;
-#endif
 
 namespace Prism.Regions
 {
@@ -51,7 +43,7 @@ namespace Prism.Regions
         /// Adds a new view to the region.
         /// </summary>
         /// <param name="view">The view to add.</param>
-        /// <returns>The <see cref="IRegionManager"/> that is set on the view if it is a <see cref="DependencyObject"/>. It will be the current region manager when using this overload.</returns>
+        /// <returns>The <see cref="IRegionManager"/> that is set on the view. It will be the current region manager when using this overload.</returns>
         IRegionManager Add(object view);
 
         /// <summary>
@@ -59,7 +51,7 @@ namespace Prism.Regions
         /// </summary>
         /// <param name="view">The view to add.</param>
         /// <param name="viewName">The name of the view. This can be used to retrieve it later by calling <see cref="GetView"/>.</param>
-        /// <returns>The <see cref="IRegionManager"/> that is set on the view if it is a <see cref="DependencyObject"/>. It will be the current region manager when using this overload.</returns>
+        /// <returns>The <see cref="IRegionManager"/> that is set on the view. It will be the current region manager when using this overload.</returns>
         IRegionManager Add(object view, string viewName);
 
         /// <summary>
@@ -68,7 +60,7 @@ namespace Prism.Regions
         /// <param name="view">The view to add.</param>
         /// <param name="viewName">The name of the view. This can be used to retrieve it later by calling <see cref="GetView"/>.</param>
         /// <param name="createRegionManagerScope">When <see langword="true"/>, the added view will receive a new instance of <see cref="IRegionManager"/>, otherwise it will use the current region manager for this region.</param>
-        /// <returns>The <see cref="IRegionManager"/> that is set on the view if it is a <see cref="DependencyObject"/>.</returns>
+        /// <returns>The <see cref="IRegionManager"/> that is set on the view.</returns>
         IRegionManager Add(object view, string viewName, bool createRegionManagerScope);
 
         /// <summary>

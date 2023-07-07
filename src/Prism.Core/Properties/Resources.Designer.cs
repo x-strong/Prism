@@ -79,6 +79,15 @@ namespace Prism.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; does not implement from IRegionBehavior..
+        /// </summary>
+        internal static string CanOnlyAddTypesThatInheritIFromRegionBehavior {
+            get {
+                return ResourceManager.GetString("CanOnlyAddTypesThatInheritIFromRegionBehavior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies must be avoided..
         /// </summary>
         internal static string CyclicDependencyFound {
@@ -186,11 +195,40 @@ namespace Prism.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mapping with the given type is already registered: {0}..
+        /// </summary>
+        internal static string MappingExistsException {
+            get {
+                return ResourceManager.GetString("MappingExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module {0} depends on other modules that don&apos;t belong to the same group..
         /// </summary>
         internal static string ModuleDependenciesNotMetInGroup {
             get {
                 return ResourceManager.GetString("ModuleDependenciesNotMetInGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The IRegionAdapter for the type {0} is not registered in the region adapter mappings. You can register an IRegionAdapter for this control by overriding the ConfigureRegionAdapterMappings method in the bootstrapper..
+        /// </summary>
+        internal static string NoRegionAdapterException {
+            get {
+                return ResourceManager.GetString("NoRegionAdapterException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception has occurred while trying to add a view to region &apos;{0}&apos;. 
+        ///    - The most likely causing exception was was: &apos;{1}&apos;.
+        ///    But also check the InnerExceptions for more detail or call .GetRootException()..
+        /// </summary>
+        internal static string OnViewRegisteredException {
+            get {
+                return ResourceManager.GetString("OnViewRegisteredException", resourceCulture);
             }
         }
         
@@ -222,6 +260,24 @@ namespace Prism.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Attach method cannot be called when Region property is null..
+        /// </summary>
+        internal static string RegionBehaviorAttachCannotBeCallWithNullRegion {
+            get {
+                return ResourceManager.GetString("RegionBehaviorAttachCannotBeCallWithNullRegion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Region property cannot be set after Attach method has been called..
+        /// </summary>
+        internal static string RegionBehaviorRegionCannotBeSetAfterAttach {
+            get {
+                return ResourceManager.GetString("RegionBehaviorRegionCannotBeSetAfterAttach", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module {0} is marked for automatic initialization when the application starts, but it depends on modules that are marked as OnDemand initialization. To fix this error, mark the dependency modules for InitializationMode=WhenAvailable, or remove this validation by extending the ModuleCatalog class..
         /// </summary>
         internal static string StartupModuleDependsOnAnOnDemandModule {
@@ -236,6 +292,15 @@ namespace Prism.Properties {
         internal static string StringCannotBeNullOrEmpty {
             get {
                 return ResourceManager.GetString("StringCannotBeNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No BehaviorType with key &apos;{0}&apos; was registered..
+        /// </summary>
+        internal static string TypeWithKeyNotRegistered {
+            get {
+                return ResourceManager.GetString("TypeWithKeyNotRegistered", resourceCulture);
             }
         }
     }
