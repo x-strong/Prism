@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using Prism.Ioc;
 using Prism.Properties;
@@ -12,6 +13,22 @@ namespace Prism.Regions
     public class RegionAdapterMappings
     {
         private readonly Dictionary<Type, IRegionAdapter> mappings = new Dictionary<Type, IRegionAdapter>();
+
+        /// <summary>
+        /// Removes an existing Registration if one exists and registers the new mapping between a type and an adapter.
+        /// </summary>
+        /// <typeparam name="TControl">The type of the control</typeparam>
+        /// <typeparam name="TAdapter">The type of the IRegionAdapter to use with the TControl</typeparam>
+        public void RegisterOrReplaceMapping<TControl, TAdapter>() where TAdapter : IRegionAdapter
+        {
+            var controlType = typeof(TControl);
+            var adapter = ContainerLocator.Container.Resolve<TAdapter>();
+
+            if (mappings.ContainsKey(controlType))
+                mappings.Remove(controlType);
+
+            mappings.Add(controlType, adapter);
+        }
 
         /// <summary>
         /// Registers the mapping between a type and an adapter.
@@ -45,6 +62,24 @@ namespace Prism.Regions
         }
 
         /// <summary>
+        /// Used internally by Prism Platforms to register the Default Mappings.
+        /// </summary>
+        /// <typeparam name="TControl"></typeparam>
+        /// <typeparam name="TAdapter"></typeparam>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void RegisterDefaultMapping<TControl, TAdapter>() where TAdapter : IRegionAdapter
+        {
+            var controlType = typeof(TControl);
+
+            if (mappings.ContainsKey(controlType))
+                return;
+
+            var adapter = ContainerLocator.Container.Resolve<TAdapter>();
+
+            mappings.Add(controlType, adapter);
+        }
+
+        /// <summary>
         /// Registers the mapping between a type and an adapter.
         /// </summary>
         /// <typeparam name="TControl">The type of the control</typeparam>
@@ -64,7 +99,6 @@ namespace Prism.Regions
         /// If there is no registered type for <paramref name="controlType"/> or any of its ancestors,
         /// an exception will be thrown.</remarks>
         /// <exception cref="KeyNotFoundException">When there is no registered type for <paramref name="controlType"/> or any of its ancestors.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "controlType")]
         public IRegionAdapter GetMapping(Type controlType)
         {
             Type currentType = controlType;

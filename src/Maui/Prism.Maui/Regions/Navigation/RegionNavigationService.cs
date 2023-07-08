@@ -1,4 +1,4 @@
-﻿using Prism.Common;
+using Prism.Common;
 using Prism.Ioc;
 using Prism.Navigation;
 using Prism.Properties;

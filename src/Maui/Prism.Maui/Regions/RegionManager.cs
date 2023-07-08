@@ -44,6 +44,20 @@ public partial class RegionManager : IRegionManager
     }
 
     /// <summary>
+    ///     Add a view to the Views collection of a Region. Note that the region must already exist in this <see cref="IRegionManager"/>.
+    /// </summary>
+    /// <param name="regionName">The name of the region to add a view to</param>
+    /// <param name="view">The view to add to the views collection</param>
+    /// <returns>The RegionManager, to easily add several views. </returns>
+    public IRegionManager AddToRegion(string regionName, object view)
+    {
+        if (!Regions.ContainsRegionWithName(regionName))
+            throw new ArgumentException(string.Format(Thread.CurrentThread.CurrentCulture, Resources.RegionNotFound, regionName), nameof(regionName));
+
+        return Regions[regionName].Add(view);
+    }
+
+    /// <summary>
     /// Creates a new region manager.
     /// </summary>
     /// <returns>A new region manager that can be used as a different scope from the current region manager.</returns>
@@ -86,7 +100,7 @@ public partial class RegionManager : IRegionManager
     /// <param name="regionName">The name of the region to call Navigate on.</param>
     /// <param name="target">The URI of the content to display.</param>
     /// <param name="navigationCallback">The navigation callback.</param>
-    public void RequestNavigate(string regionName, Uri target, Action<IRegionNavigationResult> navigationCallback) =>
+    public void RequestNavigate(string regionName, Uri target, Action<NavigationResult> navigationCallback) =>
         RequestNavigate(regionName, target, navigationCallback, null);
 
     /// <summary>
@@ -96,7 +110,7 @@ public partial class RegionManager : IRegionManager
     /// <param name="target">A <see cref="Uri"/> that represents the target where the region will navigate.</param>
     /// <param name="navigationCallback">The navigation callback that will be executed after the navigation is completed.</param>
     /// <param name="navigationParameters">An instance of <see cref="INavigationParameters"/>, which holds a collection of object parameters.</param>
-    public void RequestNavigate(string regionName, Uri target, Action<IRegionNavigationResult> navigationCallback, INavigationParameters navigationParameters)
+    public void RequestNavigate(string regionName, Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters)
     {
         try
         {
@@ -113,7 +127,7 @@ public partial class RegionManager : IRegionManager
         catch (Exception ex)
         {
             var navigationContext = new NavigationContext(null, target, navigationParameters);
-            navigationCallback?.Invoke(new RegionNavigationResult(navigationContext, ex));
+            navigationCallback?.Invoke(new NavigationResult(navigationContext, ex));
         }
     }
 

@@ -15,8 +15,8 @@ public class ViewsCollection : BindableBase, IViewsCollection
     private readonly ObservableCollection<ItemMetadata> _subjectCollection;
 
     private readonly Dictionary<ItemMetadata, MonitorInfo> _monitoredItems = new Dictionary<ItemMetadata, MonitorInfo>();
-    private Comparison<VisualElement> _sort;
-    private List<VisualElement> filteredItems = new List<VisualElement>();
+    private Comparison<object> _sort;
+    private List<object> filteredItems = new List<object>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewsCollection"/> class.
@@ -41,7 +41,7 @@ public class ViewsCollection : BindableBase, IViewsCollection
     /// Gets or sets the comparison used to sort the views.
     /// </summary>
     /// <value>The comparison to use.</value>
-    public Comparison<VisualElement> SortComparison
+    public Comparison<object> SortComparison
     {
         get => _sort;
         set => SetProperty(ref _sort, value, () =>
@@ -61,7 +61,7 @@ public class ViewsCollection : BindableBase, IViewsCollection
     /// </summary>
     /// <param name="value">The object to locate in the collection.</param>
     /// <returns><see langword="true" /> if <paramref name="value"/> is found in the collection; otherwise, <see langword="false" />.</returns>
-    public bool Contains(VisualElement value) => filteredItems.Contains(value);
+    public bool Contains(object value) => filteredItems.Contains(value);
 
     ///<summary>
     ///Returns an enumerator that iterates through the collection.
@@ -69,7 +69,7 @@ public class ViewsCollection : BindableBase, IViewsCollection
     ///<returns>
     ///A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
     ///</returns>
-    public IEnumerator<VisualElement> GetEnumerator() => filteredItems.GetEnumerator();
+    public IEnumerator<object> GetEnumerator() => filteredItems.GetEnumerator();
 
     ///<summary>
     ///Returns an enumerator that iterates through a collection.
@@ -268,16 +268,16 @@ public class ViewsCollection : BindableBase, IViewsCollection
         public bool IsInList { get; set; }
     }
 
-    private class RegionItemComparer : Comparer<VisualElement>
+    private class RegionItemComparer : Comparer<object>
     {
-        private readonly Comparison<VisualElement> comparer;
+        private readonly Comparison<object> comparer;
 
-        public RegionItemComparer(Comparison<VisualElement> comparer)
+        public RegionItemComparer(Comparison<object> comparer)
         {
             this.comparer = comparer;
         }
 
-        public override int Compare(VisualElement x, VisualElement y)
+        public override int Compare(object x, object y)
         {
             if (this.comparer == null)
             {

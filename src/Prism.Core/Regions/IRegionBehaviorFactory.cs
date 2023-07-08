@@ -7,7 +7,6 @@ namespace Prism.Regions
     /// Interface for RegionBehaviorFactories. This factory allows the registration of the default set of RegionBehaviors, that will
     /// be added to the <see cref="IRegionBehaviorCollection"/>s of all <see cref="IRegion"/>s, unless overridden on a 'per-region' basis. 
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "It is more of a factory than a collection")]
     public interface IRegionBehaviorFactory : IEnumerable<string>
     {
         /// <summary>

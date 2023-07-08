@@ -55,77 +55,29 @@ namespace Prism.Regions
         IRegionManager RegisterViewWithRegion(string regionName, Type viewType);
 
         /// <summary>
-        /// Associate a view with a region, using a delegate to resolve a concrete instance of the view.
-        /// When the region gets displayed, this delegate will be called and the result will be added to the
-        /// views collection of the region.
+        /// Initiates navigation to the target specified by the <see cref="Uri"/>.
         /// </summary>
-        /// <param name="regionName">The name of the region to associate the view with.</param>
-        /// <param name="getContentDelegate">The delegate used to resolve a concrete instance of the view.</param>
-        /// <returns>The <see cref="IRegionManager"/>, for adding several views easily</returns>
-        IRegionManager RegisterViewWithRegion(string regionName, Func<object> getContentDelegate);
+        /// <param name="regionName">The name of the Region to navigate to.</param>
+        /// <param name="target">The navigation target</param>
+        /// <param name="navigationCallback">The callback executed when the navigation request is completed.</param>
+        /// <remarks>
+        /// Convenience overloads for this method can be found as extension methods on the 
+        /// <see cref="NavigationAsyncExtensions"/> class.
+        /// </remarks>
+        void RequestNavigate(string regionName, Uri target, Action<NavigationResult> navigationCallback);
 
         /// <summary>
-        /// Navigates the specified region manager.
+        /// Initiates navigation to the target specified by the <see cref="Uri"/>.
         /// </summary>
-        /// <param name="regionName">The name of the region to call Navigate on.</param>
-        /// <param name="source">The URI of the content to display.</param>
-        /// <param name="navigationCallback">The navigation callback.</param>
-        void RequestNavigate(string regionName, Uri source, Action<NavigationResult> navigationCallback);
-
-        /// <summary>
-        /// Navigates the specified region manager.
-        /// </summary>
-        /// <param name="regionName">The name of the region to call Navigate on.</param>
-        /// <param name="source">The URI of the content to display.</param>
-        void RequestNavigate(string regionName, Uri source);
-
-        /// <summary>
-        /// Navigates the specified region manager.
-        /// </summary>
-        /// <param name="regionName">The name of the region to call Navigate on.</param>
-        /// <param name="source">The URI of the content to display.</param>
-        /// <param name="navigationCallback">The navigation callback.</param>
-        void RequestNavigate(string regionName, string source, Action<NavigationResult> navigationCallback);
-
-        /// <summary>
-        /// Navigates the specified region manager.
-        /// </summary>
-        /// <param name="regionName">The name of the region to call Navigate on.</param>
-        /// <param name="source">The URI of the content to display.</param>
-        void RequestNavigate(string regionName, string source);
-
-        /// <summary>
-        /// This method allows an IRegionManager to locate a specified region and navigate in it to the specified target Uri, passing a navigation callback and an instance of NavigationParameters, which holds a collection of object parameters.
-        /// </summary>
-        /// <param name="regionName">The name of the region where the navigation will occur.</param>
-        /// <param name="target">A Uri that represents the target where the region will navigate.</param>
-        /// <param name="navigationCallback">The navigation callback that will be executed after the navigation is completed.</param>
-        /// <param name="navigationParameters">An instance of NavigationParameters, which holds a collection of object parameters.</param>
+        /// <param name="regionName">The name of the Region to navigate to.</param>
+        /// <param name="target">The navigation target</param>
+        /// <param name="navigationCallback">The callback executed when the navigation request is completed.</param>
+        /// <param name="navigationParameters">The navigation parameters specific to the navigation request.</param>
+        /// <remarks>
+        /// Convenience overloads for this method can be found as extension methods on the 
+        /// <see cref="NavigationAsyncExtensions"/> class.
+        /// </remarks>
         void RequestNavigate(string regionName, Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters);
-
-        /// <summary>
-        /// This method allows an IRegionManager to locate a specified region and navigate in it to the specified target string, passing a navigation callback and an instance of NavigationParameters, which holds a collection of object parameters.
-        /// </summary>
-        /// <param name="regionName">The name of the region where the navigation will occur.</param>
-        /// <param name="target">A string that represents the target where the region will navigate.</param>
-        /// <param name="navigationCallback">The navigation callback that will be executed after the navigation is completed.</param>
-        /// <param name="navigationParameters">An instance of NavigationParameters, which holds a collection of object parameters.</param>
-        void RequestNavigate(string regionName, string target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters);
-
-        /// <summary>
-        /// This method allows an IRegionManager to locate a specified region and navigate in it to the specified target Uri, passing an instance of NavigationParameters, which holds a collection of object parameters.
-        /// </summary>
-        /// <param name="regionName">The name of the region where the navigation will occur.</param>
-        /// <param name="target">A Uri that represents the target where the region will navigate.</param>
-        /// <param name="navigationParameters">An instance of NavigationParameters, which holds a collection of object parameters.</param>
-        void RequestNavigate(string regionName, Uri target, NavigationParameters navigationParameters);
-
-        /// <summary>
-        /// This method allows an IRegionManager to locate a specified region and navigate in it to the specified target string, passing an instance of NavigationParameters, which holds a collection of object parameters.
-        /// </summary>
-        /// <param name="regionName">The name of the region where the navigation will occur.</param>
-        /// <param name="target">A string that represents the target where the region will navigate.</param>
-        /// <param name="navigationParameters">An instance of NavigationParameters, which holds a collection of object parameters.</param>
-        void RequestNavigate(string regionName, string target, NavigationParameters navigationParameters);
     }
+
 }

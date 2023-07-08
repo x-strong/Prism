@@ -38,6 +38,8 @@ namespace Prism.Regions
         /// <value>The comparison to use.</value>
         Comparison<object> SortComparison { get; set; }
 
+        IRegionManager Add(string viewName);
+
         ///<overloads>Adds a new view to the region.</overloads>
         /// <summary>
         /// Adds a new view to the region.
@@ -110,6 +112,6 @@ namespace Prism.Regions
         /// Gets or sets the navigation service.
         /// </summary>
         /// <value>The navigation service.</value>
-        IRegionNavigationService NavigationService { get; set; }
+        IRegionNavigationService NavigationService { get; }
     }
 }

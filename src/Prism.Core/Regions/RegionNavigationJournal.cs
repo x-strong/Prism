@@ -1,19 +1,17 @@
-
-
 using System;
 using System.Collections.Generic;
 
 namespace Prism.Regions
 {
     /// <summary>
-    /// Provides journaling of current, back, and forward navigation within regions.    
+    /// Provides journaling of current, back, and forward navigation within regions.
     /// </summary>
     public class RegionNavigationJournal : IRegionNavigationJournal
     {
-        private Stack<IRegionNavigationJournalEntry> backStack = new Stack<IRegionNavigationJournalEntry>();
-        private Stack<IRegionNavigationJournalEntry> forwardStack = new Stack<IRegionNavigationJournalEntry>();
+        private readonly Stack<IRegionNavigationJournalEntry> _backStack = new Stack<IRegionNavigationJournalEntry>();
+        private readonly Stack<IRegionNavigationJournalEntry> _forwardStack = new Stack<IRegionNavigationJournalEntry>();
 
-        private bool isNavigatingInternal;
+        private bool _isNavigatingInternal;
 
         /// <summary>
         /// Gets or sets the target that implements INavigate.
@@ -34,49 +32,37 @@ namespace Prism.Regions
         /// Gets a value that indicates whether there is at least one entry in the back navigation history.
         /// </summary>
         /// <value><c>true</c> if the journal can go back; otherwise, <c>false</c>.</value>
-        public bool CanGoBack
-        {
-            get
-            {
-                return this.backStack.Count > 0;
-            }
-        }
+        public bool CanGoBack => _backStack.Count > 0;
 
         /// <summary>
         /// Gets a value that indicates whether there is at least one entry in the forward navigation history.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance can go forward; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance can go forward; otherwise, <c>false</c>.
         /// </value>
-        public bool CanGoForward
-        {
-            get
-            {
-                return this.forwardStack.Count > 0;
-            }
-        }
+        public bool CanGoForward => _forwardStack.Count > 0;
 
         /// <summary>
         /// Navigates to the most recent entry in the back navigation history, or does nothing if no entry exists in back navigation.
         /// </summary>
         public void GoBack()
         {
-            if (this.CanGoBack)
+            if (CanGoBack)
             {
-                IRegionNavigationJournalEntry entry = this.backStack.Peek();
-                this.InternalNavigate(
+                IRegionNavigationJournalEntry entry = _backStack.Peek();
+                InternalNavigate(
                     entry,
                     result =>
                     {
                         if (result)
                         {
-                            if (this.CurrentEntry != null)
+                            if (CurrentEntry != null)
                             {
-                                this.forwardStack.Push(this.CurrentEntry);
+                                _forwardStack.Push(CurrentEntry);
                             }
 
-                            this.backStack.Pop();
-                            this.CurrentEntry = entry;
+                            _backStack.Pop();
+                            CurrentEntry = entry;
                         }
                     });
             }
@@ -87,22 +73,22 @@ namespace Prism.Regions
         /// </summary>
         public void GoForward()
         {
-            if (this.CanGoForward)
+            if (CanGoForward)
             {
-                IRegionNavigationJournalEntry entry = this.forwardStack.Peek();
-                this.InternalNavigate(
+                IRegionNavigationJournalEntry entry = _forwardStack.Peek();
+                InternalNavigate(
                     entry,
                     result =>
                     {
                         if (result)
                         {
-                            if (this.CurrentEntry != null)
+                            if (CurrentEntry != null)
                             {
-                                this.backStack.Push(this.CurrentEntry);
+                                _backStack.Push(CurrentEntry);
                             }
 
-                            this.forwardStack.Pop();
-                            this.CurrentEntry = entry;
+                            _forwardStack.Pop();
+                            CurrentEntry = entry;
                         }
                     });
             }
@@ -115,14 +101,14 @@ namespace Prism.Regions
         /// <param name="persistInHistory">Determine if the view is added to the back stack or excluded from the history.</param>
         public void RecordNavigation(IRegionNavigationJournalEntry entry, bool persistInHistory)
         {
-            if (!this.isNavigatingInternal)
+            if (!_isNavigatingInternal)
             {
-                if (this.CurrentEntry != null)
+                if (CurrentEntry != null)
                 {
-                    this.backStack.Push(this.CurrentEntry);
+                    _backStack.Push(CurrentEntry);
                 }
 
-                this.forwardStack.Clear();
+                _forwardStack.Clear();
 
                 if (persistInHistory)
                     CurrentEntry = entry;
@@ -136,19 +122,19 @@ namespace Prism.Regions
         /// </summary>
         public void Clear()
         {
-            this.CurrentEntry = null;
-            this.backStack.Clear();
-            this.forwardStack.Clear();
+            CurrentEntry = null;
+            _backStack.Clear();
+            _forwardStack.Clear();
         }
 
         private void InternalNavigate(IRegionNavigationJournalEntry entry, Action<bool> callback)
         {
-            this.isNavigatingInternal = true;
-            this.NavigationTarget.RequestNavigate(
+            _isNavigatingInternal = true;
+            NavigationTarget.RequestNavigate(
                 entry.Uri,
                 nr =>
                 {
-                    this.isNavigatingInternal = false;
+                    _isNavigatingInternal = false;
 
                     if (nr.Result.HasValue)
                     {

@@ -237,6 +237,22 @@ namespace Prism.Regions
         }
 
         /// <summary>
+        /// Adds a new view to the region by name.
+        /// </summary>
+        /// <param name="viewName">The name of the view to add.</param>
+        /// <returns>The <see cref="IRegionManager"/> that is set on the view if it is a <see cref="DependencyObject"/>. It will be the current region manager when using this overload.</returns>
+        public IRegionManager Add(string viewName)
+        {
+            var view = ContainerLocator.Container.Resolve<object>(viewName);
+            if (view is UIElement uiElement && Mvvm.ViewModelLocator.GetAutoWireViewModel(uiElement) is null)
+            {
+                Mvvm.ViewModelLocator.SetAutoWireViewModel(uiElement, true);
+            }
+
+            return Add(view, viewName);
+        }
+
+        /// <summary>
         /// Adds a new view to the region.
         /// </summary>
         /// <param name="view">The view to add.</param>

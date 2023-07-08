@@ -1,4 +1,6 @@
-﻿namespace Prism.Regions.Navigation;
+﻿using System;
+
+namespace Prism.Regions;
 
 public static class INavigationContextExtensions
 {
