@@ -1,10 +1,9 @@
+using System;
+using System.Linq;
+using Grace.DependencyInjection;
+using Grace.DependencyInjection.Exceptions;
 using Prism.Ioc;
 using Prism.Ioc.Internals;
-using Grace.DependencyInjection;
-using System;
-using System.Xml.Linq;
-using System.Linq;
-using Grace.DependencyInjection.Exceptions;
 
 namespace Prism.Grace
 {

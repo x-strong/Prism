@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>net461;net47;net6.0-windows</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Prism.Grace</RootNamespace>
+    <Description>Use these extensions to build Prism applications based on Grace.</Description>
+    <PackageTags>prism;grace;mvvm;wpf;xaml</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grace" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Prism.Wpf\Prism.Wpf.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Containers\Prism.Grace.Shared\Prism.Grace.Shared.projitems" Label="Shared" />
+
+</Project>

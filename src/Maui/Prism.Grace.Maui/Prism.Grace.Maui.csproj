@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <UseMaui>true</UseMaui>
+    <Description>Prism.Grace.Maui provides the implementation of Prism's IContainerExtension using the Grace container.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grace" />
+    <PackageReference Include="Grace.DependencyInjection.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Prism.Maui\Prism.Maui.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Containers\Prism.Grace.Shared\Prism.Grace.Shared.projitems" Label="Shared" />
+
+</Project>

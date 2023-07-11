@@ -1,0 +1,4 @@
+﻿<linker>
+  <assembly fullname="Grace" />
+  <assembly fullname="Prism.Grace.Uno" />
+</linker>
