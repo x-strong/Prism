@@ -85,7 +85,7 @@ namespace Prism.Regions
         /// <param name="target">The target.</param>
         /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Exception is marshalled to callback")]
-        public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback)
+        public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback)
         {
             RequestNavigate(target, navigationCallback, null);
         }
@@ -96,11 +96,8 @@ namespace Prism.Regions
         /// <param name="target">The target.</param>
         /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
         /// <param name="navigationParameters">The navigation parameters specific to the navigation request.</param>
-        public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters)
+        public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback, NavigationParameters navigationParameters)
         {
-            if (navigationCallback == null)
-                throw new ArgumentNullException(nameof(navigationCallback));
-
             try
             {
                 DoNavigate(target, navigationCallback, navigationParameters);
@@ -111,7 +108,7 @@ namespace Prism.Regions
             }
         }
 
-        private void DoNavigate(Uri source, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters)
+        private void DoNavigate(Uri source, RegionNavigationCallback navigationCallback, NavigationParameters navigationParameters)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -131,7 +128,7 @@ namespace Prism.Regions
 
         private void RequestCanNavigateFromOnCurrentlyActiveView(
             NavigationContext navigationContext,
-            Action<NavigationResult> navigationCallback,
+            RegionNavigationCallback navigationCallback,
             object[] activeViews,
             int currentViewIndex)
         {
@@ -176,7 +173,7 @@ namespace Prism.Regions
 
         private void RequestCanNavigateFromOnCurrentlyActiveViewModel(
             NavigationContext navigationContext,
-            Action<NavigationResult> navigationCallback,
+            RegionNavigationCallback navigationCallback,
             object[] activeViews,
             int currentViewIndex)
         {
@@ -216,7 +213,7 @@ namespace Prism.Regions
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Exception is marshalled to callback")]
-        private void ExecuteNavigation(NavigationContext navigationContext, object[] activeViews, Action<NavigationResult> navigationCallback)
+        private async void ExecuteNavigation(NavigationContext navigationContext, object[] activeViews, RegionNavigationCallback navigationCallback)
         {
             try
             {
@@ -242,7 +239,7 @@ namespace Prism.Regions
                 Action<INavigationAware> action = (n) => n.OnNavigatedTo(navigationContext);
                 MvvmHelpers.ViewAndViewModelAction(view, action);
 
-                navigationCallback(new NavigationResult(navigationContext, true));
+                await navigationCallback.InvokeAsync(new NavigationResult(navigationContext, true));
 
                 // Raise the navigated event when navigation is completed.
                 RaiseNavigated(navigationContext);
@@ -260,12 +257,12 @@ namespace Prism.Regions
             return persist;
         }
 
-        private void NotifyNavigationFailed(NavigationContext navigationContext, Action<NavigationResult> navigationCallback, Exception e)
+        private async void NotifyNavigationFailed(NavigationContext navigationContext, RegionNavigationCallback navigationCallback, Exception e)
         {
             var navigationResult =
                 e != null ? new NavigationResult(navigationContext, e) : new NavigationResult(navigationContext, false);
 
-            navigationCallback(navigationResult);
+            await navigationCallback.InvokeAsync(navigationResult);
             RaiseNavigationFailed(navigationContext, e);
         }
 

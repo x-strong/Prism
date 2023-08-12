@@ -4,7 +4,7 @@ namespace Prism.Regions;
 
 public static class INavigationContextExtensions
 {
-    public static string NavigatedName(this INavigationContext context)
+    public static string NavigatedName(this NavigationContext context)
     {
         var uri = context.Uri;
         if (!uri.IsAbsoluteUri)

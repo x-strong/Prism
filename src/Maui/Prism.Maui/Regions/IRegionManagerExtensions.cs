@@ -50,7 +50,7 @@ public static class IRegionManagerExtensions
         if (regionManager == null)
             throw new ArgumentNullException(nameof(regionManager));
 
-        regionManager.RequestNavigate(regionName, target, nr => { });
+        regionManager.RequestNavigate(regionName, target, RegionNavigationCallback.Empty);
     }
 
     /// <summary>

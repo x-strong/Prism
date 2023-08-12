@@ -244,10 +244,17 @@ namespace Prism.Regions
         public IRegionManager Add(string viewName)
         {
             var view = ContainerLocator.Container.Resolve<object>(viewName);
+#if HAS_UNO_WINUI || HAS_WINUI
+            if (view is UIElement uiElement && Mvvm.ViewModelLocator.GetAutowireViewModel(uiElement) is null)
+            {
+                Mvvm.ViewModelLocator.SetAutowireViewModel(uiElement, true);
+            }
+#else
             if (view is UIElement uiElement && Mvvm.ViewModelLocator.GetAutoWireViewModel(uiElement) is null)
             {
                 Mvvm.ViewModelLocator.SetAutoWireViewModel(uiElement, true);
             }
+#endif
 
             return Add(view, viewName);
         }
@@ -364,7 +371,7 @@ namespace Prism.Regions
         /// </summary>
         /// <param name="target">The target.</param>
         /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
-        public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback)
+        public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback)
         {
             this.RequestNavigate(target, navigationCallback, null);
         }
@@ -375,7 +382,7 @@ namespace Prism.Regions
         /// <param name="target">The target.</param>
         /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
         /// <param name="navigationParameters">The navigation parameters specific to the navigation request.</param>
-        public void RequestNavigate(Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters)
+        public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback, NavigationParameters navigationParameters)
         {
             this.NavigationService.RequestNavigate(target, navigationCallback, navigationParameters);
         }

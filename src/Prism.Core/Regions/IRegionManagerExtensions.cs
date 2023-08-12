@@ -1,4 +1,6 @@
-﻿namespace Prism.Regions
+﻿using System;
+
+namespace Prism.Regions
 {
     /// <summary>
     /// Common Extensions for the RegionManager
@@ -16,5 +18,34 @@
         /// <returns>The <see cref="IRegionManager"/>, for adding several views easily</returns>
         public static IRegionManager RegisterViewWithRegion<T>(this IRegionManager regionManager, string regionName) =>
             regionManager.RegisterViewWithRegion(regionName, typeof(T));
+
+        /// <summary>
+        /// Initiates navigation to the target specified by the <see cref="Uri"/>.
+        /// </summary>
+        /// <param name="regionManager">The current <see cref="IRegionManager"/>.</param>
+        /// <param name="regionName">The name of the Region to navigate to.</param>
+        /// <param name="target">The navigation target</param>
+        /// <param name="navigationCallback">The callback executed when the navigation request is completed.</param>
+        /// <remarks>
+        /// Convenience overloads for this method can be found as extension methods on the 
+        /// <see cref="NavigationAsyncExtensions"/> class.
+        /// </remarks>
+        public static void RequestNavigate(this IRegionManager regionManager, string regionName, Uri target, Action<NavigationResult> navigationCallback) =>
+            regionManager.RequestNavigate(regionName, target, new RegionNavigationCallback(navigationCallback));
+
+        /// <summary>
+        /// Initiates navigation to the target specified by the <see cref="Uri"/>.
+        /// </summary>
+        /// <param name="regionManager">The current <see cref="IRegionManager"/>.</param>
+        /// <param name="regionName">The name of the Region to navigate to.</param>
+        /// <param name="target">The navigation target</param>
+        /// <param name="navigationCallback">The callback executed when the navigation request is completed.</param>
+        /// <param name="navigationParameters">The navigation parameters specific to the navigation request.</param>
+        /// <remarks>
+        /// Convenience overloads for this method can be found as extension methods on the 
+        /// <see cref="NavigationAsyncExtensions"/> class.
+        /// </remarks>
+        public static void RequestNavigate(this IRegionManager regionManager, string regionName, Uri target, Action<NavigationResult> navigationCallback, NavigationParameters navigationParameters) =>
+            regionManager.RequestNavigate(regionName, target, new RegionNavigationCallback(navigationCallback), navigationParameters);
     }
 }
