@@ -120,9 +120,9 @@ public static class MvvmHelpers
         return null;
     }
 
-    public static bool IsNavigationTarget(object view, INavigationContext navigationContext)
+    public static bool IsNavigationTarget(object view, Regions.NavigationContext navigationContext)
     {
-        var implementor = GetImplementerFromViewOrViewModel<IRegionAware>(view);
+        var implementor = GetImplementerFromViewOrViewModel<Regions.INavigationAware>(view);
         if (implementor is not null)
             return implementor.IsNavigationTarget(navigationContext);
 
@@ -135,14 +135,14 @@ public static class MvvmHelpers
         return path == viewType.Name || path == viewType.FullName;
     }
 
-    public static void OnNavigatedFrom(object view, INavigationContext navigationContext)
+    public static void OnNavigatedFrom(object view, Regions.NavigationContext navigationContext)
     {
-        InvokeViewAndViewModelAction<IRegionAware>(view, x => x.OnNavigatedFrom(navigationContext));
+        InvokeViewAndViewModelAction<Regions.INavigationAware>(view, x => x.OnNavigatedFrom(navigationContext));
     }
 
-    public static void OnNavigatedTo(object view, INavigationContext navigationContext)
+    public static void OnNavigatedTo(object view, Regions.NavigationContext navigationContext)
     {
-        InvokeViewAndViewModelAction<IRegionAware>(view, x => x.OnNavigatedTo(navigationContext));
+        InvokeViewAndViewModelAction<Regions.INavigationAware>(view, x => x.OnNavigatedTo(navigationContext));
     }
 
     public static Task<bool> CanNavigateAsync(object page, INavigationParameters parameters)

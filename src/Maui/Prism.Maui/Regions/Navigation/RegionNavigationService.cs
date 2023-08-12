@@ -1,6 +1,5 @@
 using Prism.Common;
 using Prism.Ioc;
-using Prism.Navigation;
 using Prism.Properties;
 
 namespace Prism.Regions.Navigation;
@@ -45,7 +44,7 @@ public class RegionNavigationService : IRegionNavigationService
     /// </summary>
     public event EventHandler<RegionNavigationEventArgs> Navigating;
 
-    private void RaiseNavigating(INavigationContext navigationContext)
+    private void RaiseNavigating(NavigationContext navigationContext)
     {
         Navigating?.Invoke(this, new RegionNavigationEventArgs(navigationContext));
     }
@@ -55,7 +54,7 @@ public class RegionNavigationService : IRegionNavigationService
     /// </summary>
     public event EventHandler<RegionNavigationEventArgs> Navigated;
 
-    private void RaiseNavigated(INavigationContext navigationContext)
+    private void RaiseNavigated(NavigationContext navigationContext)
     {
         Navigated?.Invoke(this, new RegionNavigationEventArgs(navigationContext));
     }
@@ -65,7 +64,7 @@ public class RegionNavigationService : IRegionNavigationService
     /// </summary>
     public event EventHandler<RegionNavigationFailedEventArgs> NavigationFailed;
 
-    private void RaiseNavigationFailed(INavigationContext navigationContext, Exception error)
+    private void RaiseNavigationFailed(NavigationContext navigationContext, Exception error)
     {
         NavigationFailed?.Invoke(this, new RegionNavigationFailedEventArgs(navigationContext, error));
     }
@@ -75,7 +74,7 @@ public class RegionNavigationService : IRegionNavigationService
     /// </summary>
     /// <param name="target">The target.</param>
     /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
-    public void RequestNavigate(Uri target, Action<IRegionNavigationResult> navigationCallback)
+    public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback)
     {
         RequestNavigate(target, navigationCallback, null);
     }
@@ -86,11 +85,8 @@ public class RegionNavigationService : IRegionNavigationService
     /// <param name="target">The target.</param>
     /// <param name="navigationCallback">A callback to execute when the navigation request is completed.</param>
     /// <param name="regionParameters">The navigation parameters specific to the navigation request.</param>
-    public void RequestNavigate(Uri target, Action<IRegionNavigationResult> navigationCallback, INavigationParameters regionParameters)
+    public void RequestNavigate(Uri target, RegionNavigationCallback navigationCallback, NavigationParameters regionParameters)
     {
-        if (navigationCallback == null)
-            throw new ArgumentNullException(nameof(navigationCallback));
-
         try
         {
             DoNavigate(target, navigationCallback, regionParameters);
@@ -101,7 +97,7 @@ public class RegionNavigationService : IRegionNavigationService
         }
     }
 
-    private void DoNavigate(Uri source, Action<IRegionNavigationResult> navigationCallback, INavigationParameters regionParameters)
+    private void DoNavigate(Uri source, RegionNavigationCallback navigationCallback, NavigationParameters regionParameters)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -120,8 +116,8 @@ public class RegionNavigationService : IRegionNavigationService
     }
 
     private void RequestCanNavigateFromOnCurrentlyActiveView(
-        INavigationContext navigationContext,
-        Action<IRegionNavigationResult> navigationCallback,
+        NavigationContext navigationContext,
+        RegionNavigationCallback navigationCallback,
         VisualElement[] activeViews,
         int currentViewIndex)
     {
@@ -165,8 +161,8 @@ public class RegionNavigationService : IRegionNavigationService
     }
 
     private void RequestCanNavigateFromOnCurrentlyActiveViewModel(
-        INavigationContext navigationContext,
-        Action<IRegionNavigationResult> navigationCallback,
+        NavigationContext navigationContext,
+        RegionNavigationCallback navigationCallback,
         VisualElement[] activeViews,
         int currentViewIndex)
     {
@@ -202,7 +198,7 @@ public class RegionNavigationService : IRegionNavigationService
             currentViewIndex + 1);
     }
 
-    private void ExecuteNavigation(INavigationContext navigationContext, object[] activeViews, Action<IRegionNavigationResult> navigationCallback)
+    private async void ExecuteNavigation(NavigationContext navigationContext, object[] activeViews, RegionNavigationCallback navigationCallback)
     {
         try
         {
@@ -227,7 +223,7 @@ public class RegionNavigationService : IRegionNavigationService
             // The view can be informed of navigation
             MvvmHelpers.OnNavigatedTo(view, navigationContext);
 
-            navigationCallback(new RegionNavigationResult(navigationContext, true));
+            await navigationCallback.InvokeAsync(new NavigationResult(navigationContext, true));
 
             // Raise the navigated event when navigation is completed.
             RaiseNavigated(navigationContext);
@@ -245,7 +241,7 @@ public class RegionNavigationService : IRegionNavigationService
         return persist;
     }
 
-    private void NotifyNavigationFailed(INavigationContext navigationContext, Action<IRegionNavigationResult> navigationCallback, Exception e)
+    private void NotifyNavigationFailed(NavigationContext navigationContext, RegionNavigationCallback navigationCallback, Exception e)
     {
         var navigationResult =
             e != null ? new RegionNavigationResult(navigationContext, e) : new RegionNavigationResult(navigationContext, false);
@@ -254,7 +250,7 @@ public class RegionNavigationService : IRegionNavigationService
         RaiseNavigationFailed(navigationContext, e);
     }
 
-    private static void NotifyActiveViewsNavigatingFrom(INavigationContext navigationContext, object[] activeViews)
+    private static void NotifyActiveViewsNavigatingFrom(NavigationContext navigationContext, object[] activeViews)
     {
         foreach (var item in activeViews)
         {
